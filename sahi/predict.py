@@ -101,12 +101,17 @@ def get_prediction(
 
     # process prediction
     time_start = time.time()
-    # works only with 1 batch
+    # used to works only with 1 batch
+    # now modified _create_object_predictions_from_original_predictions called
     detection_model.convert_original_predictions(
         offset_amounts=offset_amounts,
         full_shapes=full_shapes,
     )
-    object_predictions: List[ObjectPrediction] = detection_model.object_predictions
+    # object_predictions = detection_model.object_predictions  #List[ObjectPrediction]
+    # TODO: has to be a list of ObjectPrediction not list of lists of object predictions --> batches
+    
+    # put all prediction across the batch images into a single list         # object_predictions = detection_model.object_predictions_per_image[0]
+    object_predictions = [op for oplist in detection_model.object_predictions_per_image for op in oplist]
 
     # postprocess matching predictions
     if postprocess is not None:
@@ -121,10 +126,15 @@ def get_prediction(
             durations_in_seconds["prediction"],
             "seconds.",
         )
+    # return PredictionResult(
+    #     image=image, object_predictions=object_predictions, durations_in_seconds=durations_in_seconds
+    # )
 
-    return PredictionResult(
+    p = PredictionResult(
         image=image, object_predictions=object_predictions, durations_in_seconds=durations_in_seconds
     )
+    
+    return p
 
 
 def get_sliced_prediction(
@@ -239,7 +249,7 @@ def get_sliced_prediction(
         for sliced_image in slice_image_result.images[start:end]:
             images.append(sliced_image)
 
-        # perform batch prediction
+        # perform batch prediction --> passing the batch_size number of images
         full_shapes = [
             [
                 slice_image_result.original_image_height,
