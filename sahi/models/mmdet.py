@@ -36,8 +36,9 @@ class MmdetDetectionModel(DetectionModel):
 
         # but for batched inference use DetInferencer 
         self.inferencer = DetInferencer(model=self.config_path,
-                                   weights=self.model_path, 
-                                   device="cuda:0")
+                                        weights=self.model_path, 
+                                        device="cuda:0", 
+                                        show_progress=False)
         
         self.CLASSES = model.dataset_meta['classes']
 
@@ -63,7 +64,7 @@ class MmdetDetectionModel(DetectionModel):
             category_mapping = {str(ind): category_name for ind, category_name in enumerate(self.category_names)}
             self.category_mapping = category_mapping
 
-    def perform_inference(self, images: List):
+    def perform_inference(self, images: List, store_slice_results=False):
         """
         Prediction is performed using self.model and the prediction result is set to self._original_predictions.
         Args:
@@ -89,11 +90,8 @@ class MmdetDetectionModel(DetectionModel):
                 images[ind] = image[..., ::-1]
                 # images[ind] = image
 
-        # import mmcv
-        # mmcv.imshow(images[0])
-
         # prediction_result = inference_detector(self.model, images)
-        print(f"running mmdet inferencer with batch size {len(images)}")
+        # print(f"running mmdet inferencer with batch size {len(images)}")
         prediction_result = self.inferencer(images, batch_size=len(images), )
 
         self._original_predictions = prediction_result['predictions']

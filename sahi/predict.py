@@ -153,6 +153,7 @@ def get_sliced_prediction(
     merge_buffer_length: int = None,
     auto_slice_resolution: bool = True,
     batch_size: int = 1,
+    save_slice_results = False,
 ) -> PredictionResult:
     """
     Function for slice image + get predicion for each slice + combine predictions in full image.
@@ -200,6 +201,8 @@ def get_sliced_prediction(
             it enables automatically calculate these params from image resolution and orientation.
         batch_size: int
             Batch size for sliced prediction. Default is 1.
+        save_slice_results:str
+            Debug option! Stores sliced PredictionResults to save_slice_results dir.
 
     Returns:
         A Dict with fields:
@@ -242,6 +245,7 @@ def get_sliced_prediction(
 
     object_predictions = []
     start = 0
+    count = 0
     while True:
         # prepare batch slices
         end = min(start + batch_size, num_slices)
@@ -263,6 +267,13 @@ def get_sliced_prediction(
             offset_amounts=slice_image_result.starting_pixels[start:end],
             full_shapes=full_shapes,
         )
+
+        # !! doesn't work with batched results 
+        #     --> PredictionResult then cotains detections for more than 1 image
+        # TODO: different dirs/names for different images
+        if save_slice_results:
+            prediction_result.export_visuals(save_slice_results, file_name="sl"+str(count))
+
         # convert sliced predictions to full predictions
         for object_prediction in prediction_result.object_predictions:
             if object_prediction:  # if not empty
@@ -275,6 +286,7 @@ def get_sliced_prediction(
         if end >= num_slices:
             break
         start += batch_size
+        count += 1 
 
     # perform standard prediction
     if num_slices > 1 and perform_standard_pred:
