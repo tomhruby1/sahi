@@ -79,8 +79,6 @@ class MmdetDetectionModel(DetectionModel):
         if self.model is None:
             raise ValueError("Model is not loaded, load it by calling .load_model()")
         
-        # Supports only batch of 1: from mmdet.apis import inference_detector
-
         # perform inference
         for ind, image in enumerate(images):
             if isinstance(image, Image.Image):
@@ -175,6 +173,8 @@ class MmdetDetectionModel(DetectionModel):
                     continue
 
                 # parse prediction mask TODO: support
+                # no parsing from RLE --> mmdet inferencer modified
+
                 # if self.has_mask:
                 #     if "counts" in mask:
                 #         if can_decode_rle:
@@ -192,7 +192,7 @@ class MmdetDetectionModel(DetectionModel):
                 #         continue
                 # else:
                 #     bool_mask = None
-                bool_mask = None
+                bool_mask = mask
 
                 # fix negative box coords
                 bbox[0] = max(0, bbox[0])
