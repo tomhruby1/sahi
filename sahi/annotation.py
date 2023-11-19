@@ -3,6 +3,7 @@
 
 import copy
 from typing import Dict, List, Optional
+import os
 
 import numpy as np
 
@@ -20,7 +21,6 @@ try:
     use_rle = True
 except ImportError:
     use_rle = False
-
 
 class BoundingBox:
     """
@@ -246,13 +246,13 @@ class Mask:
 
     def encode_bool_mask(self, bool_mask):
         _mask = bool_mask
-        if use_rle:
+        if use_rle and os.environ['use_rle'] == 'true':
             _mask = mask_utils.encode(np.asfortranarray(bool_mask.astype(np.uint8)))
         return _mask
 
     def decode_bool_mask(self, bool_mask):
         _mask = bool_mask
-        if use_rle:
+        if use_rle and os.environ['use_rle'] == 'true':
             _mask = mask_utils.decode(bool_mask).astype(bool)
         return _mask
 
