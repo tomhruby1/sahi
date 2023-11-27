@@ -245,7 +245,7 @@ class Mask:
             self.full_shape_width = None
 
     def encode_bool_mask(self, bool_mask):
-        _mask = bool_mask
+        _mask = bool_mask.astype(bool)
         if use_rle and os.environ['use_rle'] == 'true':
             _mask = mask_utils.encode(np.asfortranarray(bool_mask.astype(np.uint8)))
         return _mask

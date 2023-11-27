@@ -209,6 +209,7 @@ def get_sliced_prediction(
             object_predictions: a list of sahi.prediction.ObjectPrediction
             durations_in_seconds: a dict containing elapsed times for profiling
     """
+    print(f"sliced predcion with batch size {batch_size}, using rle:{os.environ['use_rle']}")
 
     # for profiling
     durations_in_seconds = dict()
