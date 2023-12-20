@@ -82,11 +82,15 @@ class ObjectPrediction(ObjectAnnotation):
             full_shape=full_shape,
         )
 
-    def to_coco_prediction(self, image_id=None):
+    def to_coco_prediction(self, image_id=None, mask:bool=True):
         """
         Returns sahi.utils.coco.CocoPrediction representation of ObjectAnnotation.
+        args:
+            - mask: if False don't encode the masks (slow)
         """
-        if self.mask:
+        if not mask:
+            print("mask coco encoding skipped")
+        if self.mask and mask:
             coco_prediction = CocoPrediction.from_coco_segmentation(
                 segmentation=self.mask.to_coco_segmentation(),
                 category_id=self.category.id,
@@ -175,10 +179,10 @@ class PredictionResult:
             coco_annotation_list.append(object_prediction.to_coco_prediction().json)
         return coco_annotation_list
 
-    def to_coco_predictions(self, image_id: Optional[int] = None):
+    def to_coco_predictions(self, image_id: Optional[int] = None, masks: Optional[bool]=True):
         coco_prediction_list = []
         for object_prediction in self.object_predictions:
-            coco_prediction_list.append(object_prediction.to_coco_prediction(image_id=image_id).json)
+            coco_prediction_list.append(object_prediction.to_coco_prediction(image_id=image_id, mask=masks).json)
         return coco_prediction_list
 
     def to_imantics_annotations(self):
