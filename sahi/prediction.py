@@ -138,8 +138,18 @@ class PredictionResult:
         object_prediction_list: List[ObjectPrediction] = None,
         durations_in_seconds: Optional[Dict] = None,
     ):
-        self.image: Image.Image = read_image_as_pil(image)
-        self.image_width, self.image_height = self.image.size
+        
+        # WARNING NOT HAVING PIL image probably breaks something elsewhere! 
+        # self.image: Image.Image = read_image_as_pil(image)
+        self.image = image  #  PIL conversion needed??
+
+        if isinstance(image, Image.Image):
+            self.image_width, self.image_height = self.image.size
+        elif isinstance(image, np.ndarray):
+            self.image_width, self.image_height = self.image.shape[0], self.image.shape[1]
+        else:
+            raise TypeError(f"unexpected kind of image {type(image)}")
+
         self.durations_in_seconds = durations_in_seconds
 
         if object_prediction_list is not None:

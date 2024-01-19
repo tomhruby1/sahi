@@ -90,9 +90,11 @@ def get_prediction(
     if not isinstance(images, list):
         images = [images]
 
-    # read images as pil
-    for ind, image in enumerate(images):
-        images[ind] = read_image_as_pil(image)
+    # # read images as pil
+    # for ind, image in enumerate(images):
+    #     images[ind] = read_image_as_pil(image)
+    # images -- list of ndarrays of lentgh  batch size
+
     # get prediction
     time_start = time.time()
     detection_model.perform_inference(images)
@@ -130,6 +132,8 @@ def get_prediction(
     #     image=image, object_predictions=object_predictions, durations_in_seconds=durations_in_seconds
     # )
 
+    # hmm only single image in prediction result, but that should not matter, predictions are ok
+    image = images[-1]
     p = PredictionResult(
         image=image, object_predictions=object_predictions, durations_in_seconds=durations_in_seconds
     )
