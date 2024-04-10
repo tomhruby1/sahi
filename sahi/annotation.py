@@ -614,6 +614,7 @@ class ObjectAnnotation:
                 full_shape=full_shape,
             )
             bbox_from_bool_mask = get_bbox_from_bool_mask(bool_mask)
+    
             # https://github.com/obss/sahi/issues/235
             if bbox_from_bool_mask is not None:
                 bbox = bbox_from_bool_mask

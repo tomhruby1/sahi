@@ -89,7 +89,8 @@ class ObjectPrediction(ObjectAnnotation):
             - mask: if False don't encode the masks (slow)
         """
         if not mask:
-            print("mask coco encoding skipped")
+            # print("mask coco encoding skipped")
+            pass
         if self.mask and mask:
             coco_prediction = CocoPrediction.from_coco_segmentation(
                 segmentation=self.mask.to_coco_segmentation(),

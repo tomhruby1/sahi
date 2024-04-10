@@ -294,15 +294,18 @@ def get_sliced_prediction(
         count += 1 
 
     # perform standard prediction
-    if num_slices > 1 and perform_standard_pred:
-        prediction_result = get_prediction(
-            images=image,
-            detection_model=detection_model,
-            offset_amounts=[[0, 0]],
-            full_shapes=None,
-            postprocess=None,
-        )
-        object_predictions.extend(prediction_result.object_predictions)
+    try:
+        if num_slices > 1 and perform_standard_pred:
+            prediction_result = get_prediction(
+                images=image,
+                detection_model=detection_model,
+                offset_amounts=[[0, 0]],
+                full_shapes=None,
+                postprocess=None,
+            )
+            object_predictions.extend(prediction_result.object_predictions)
+    except Exception as ex:
+        print(f"Error running the standard prediction: \n{ex}")
 
     # merge matching predictions
     if len(object_predictions) > 1:
