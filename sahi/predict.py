@@ -163,7 +163,7 @@ def get_sliced_prediction(
     Function for slice image + get predicion for each slice + combine predictions in full image.
 
     Args:
-        image: str or np.ndarray
+        image: Image or str
             Location of image or numpy image matrix to slice
         detection_model: model.DetectionModel
         slice_height: int
