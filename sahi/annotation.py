@@ -619,7 +619,10 @@ class ObjectAnnotation:
             if bbox_from_bool_mask is not None:
                 bbox = bbox_from_bool_mask
             else:
-                raise ValueError("Invalid boolean mask.")
+                # top, bottom row, left, right column respectivelly
+                mask_on_edge =  np.any(bool_mask[0, :]) or np.any(bool_mask[-1, :]) or np.any(bool_mask[:, 0]) or np.any(bool_mask[:, -1])
+                if not mask_on_edge and np.sum(bool_mask) > 1000:
+                    raise ValueError("Invalid boolean mask.")
         else:
             self.mask = None
 
