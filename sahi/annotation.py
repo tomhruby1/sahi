@@ -737,7 +737,7 @@ class ObjectAnnotation:
     def get_empty_mask(cls):
         return Mask(bool_mask=None)
 
-    def remap(self, inplace: bool = False):
+    def remap(self, inplace: bool = True):
         """
         Remaps the box and mask annotations from sliced image to full sized image.
 

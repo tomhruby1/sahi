@@ -25,21 +25,14 @@ class MmdetDetectionModel(DetectionModel):
         """
         Detection model is initialized and set to self.model.
         """
-        from mmdet.apis import init_detector
-
-        # create model
-        model = init_detector(
-            config=self.config_path,
-            checkpoint=self.model_path,
-            device=self.device,
-        )
-
-        # but for batched inference use DetInferencer 
+        
+        # create model   
         self.inferencer = DetInferencer(model=self.config_path,
                                         weights=self.model_path, 
                                         device="cuda:0", 
                                         show_progress=False)
-        
+        model = self.inferencer.model
+
         self.CLASSES = model.dataset_meta['classes']
 
         # update model image size
