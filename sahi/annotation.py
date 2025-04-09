@@ -246,8 +246,9 @@ class Mask:
 
     def encode_bool_mask(self, bool_mask):
         _mask = bool_mask.astype(bool)
-        if use_rle and os.environ['use_rle'] == 'true':
-            _mask = mask_utils.encode(np.asfortranarray(bool_mask.astype(np.uint8)))
+        if 'use_rle' in os.environ: # TODO: this  UGLY get rid of inv. vars here
+            if use_rle and os.environ['use_rle'] == 'true':
+                _mask = mask_utils.encode(np.asfortranarray(bool_mask.astype(np.uint8)))
         return _mask
 
     def decode_bool_mask(self, bool_mask):
